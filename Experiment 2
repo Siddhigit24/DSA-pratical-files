@@ -1,0 +1,118 @@
+#include <iostream>
+#include <stack>
+#include <string>
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+
+Using namespace std;
+
+// Helper functions
+Int precedence(char op) {
+    If (op == ‘+’ || op == ‘-‘) return 1;
+    If (op == ‘*’ || op == ‘/’) return 2;
+    If (op == ‘^’) return 3;
+    Return 0;
+}
+
+Bool isOperator(char c) {
+    Return c == ‘+’ || c == ‘-‘ || c == ‘*’ || c == ‘/’ || c == ‘^’;
+}
+
+String infixToPostfix(string expression) {
+    Stack<char> s;
+    String result = “”;
+    For (char &ch : expression) {
+        If (isalnum(ch)) {
+            Result += ch; // Operand goes to result
+        } else if (ch == ‘(‘) {
+            s.push(ch); // Push ‘(‘ to stack
+        } else if (ch == ‘)’) {
+            While (!s.empty() && s.top() != ‘(‘) {
+                Result += s.top(); // Pop and append operators
+                s.pop();
+            }
+            s.pop(); // Remove ‘(‘
+        } else { // Operator
+            While (!s.empty() && precedence(s.top()) >= precedence(ch)) {
+                Result += s.top();
+                s.pop();
+            }
+            s.push(ch); // Push current operator
+        }
+    }
+    While (!s.empty()) { // Append remaining operators
+        Result += s.top();
+        s.pop();
+    }
+    Return result;
+}
+
+String infixToPrefix(string expression) {
+    Reverse(expression.begin(), expression.end()); // Reverse the expression
+    For (char &ch : expression) {
+        If (ch == ‘(‘) ch = ‘)’; // Swap ‘(‘ and ‘)’
+        Else if (ch == ‘)’) ch = ‘(‘;
+    }
+    String postfix = infixToPostfix(expression);
+    Reverse(postfix.begin(), postfix.end()); // Reverse postfix to get prefix
+    Return postfix;
+}
+
+Int evaluatePostfix(string expression) {
+    Stack<int> s;
+    For (char &ch : expression) {
+        If (isdigit(ch)) {
+            s.push(ch – ‘0’); // Push operand as integer
+        } else {
+            Int b = s.top(); s.pop();
+            Int a = s.top(); s.pop();
+            Switch (ch) {
+                Case ‘+’: s.push(a + b); break;
+                Case ‘-‘: s.push(a – b); break;
+                Case ‘*’: s.push(a * b); break;
+                Case ‘/’: s.push(a / b); break;
+                Case ‘^’: s.push(pow(a, b)); break;
+            }
+        }
+    }
+    Return s.top();
+}
+
+Int evaluatePrefix(string expression) {
+    Stack<int> s;
+    Reverse(expression.begin(), expression.end()); // Reverse prefix expression
+    For (char &ch : expression) {
+        If (isdigit(ch)) {
+            s.push(ch – ‘0’); // Push operand as integer
+        } else {
+            Int a = s.top(); s.pop();
+            Int b = s.top(); s.pop();
+            Switch (ch) {
+                Case ‘+’: s.push(a + b); break;
+                Case ‘-‘: s.push(a – b); break;
+                Case ‘*’: s.push(a * b); break;
+                Case ‘/’: s.push(a / b); break;
+                Case ‘^’: s.push(pow(a, b)); break;
+            }
+        }
+    }
+    Return s.top();
+}
+
+// Main function
+Int main() {
+    String infix = “a+b*(c^d-e)^(f+g*h)-I”;
+
+    Cout << “Infix Expression: “ << infix << endl;
+    Cout << “Postfix Expression: “ << infixToPostfix(infix) << endl;
+    Cout << “Prefix Expression: “ << infixToPrefix(infix) << endl;
+
+    String postfix = “53+82-*”;
+    String prefix = “-+5*34/82”;
+
+    Cout << “Evaluate Postfix (‘53+82-*’): “ << evaluatePostfix(postfix) << endl;
+    Cout << “Evaluate Prefix (‘-+5*34/82’): “ << evaluatePrefix(prefix) << endl;
+
+    Return 0;
+}
