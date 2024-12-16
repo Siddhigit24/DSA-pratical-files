@@ -1,0 +1,80 @@
+#include <iostream>
+Using namespace std;
+
+Class CircularQueue {
+    Int *arr;       // Array to hold queue elements
+    Int front, rear, size; // Pointers to front, rear, and size of the queue
+    Int capacity;   // Maximum capacity of the queue
+
+Public:
+    // Constructor to initialize the queue
+    CircularQueue(int cap) {
+        Capacity = cap;
+        Arr = new int[capacity];
+        Front = -1;
+        Rear = -1;
+        Size = 0;
+    }
+
+    // Insertion in the queue
+    Void enqueue(int value) {
+        If (size == capacity) {
+            Cout << “Queue is full!\n”;
+            Return;
+        }
+        If (front == -1) front = 0; // Initialize front if the queue was empty
+        Rear = (rear + 1) % capacity; // Circular increment of rear
+        Arr[rear] = value;           // Insert value
+        Size++;
+    }
+
+    // Deletion from the queue
+    Void dequeue() {
+        If (size == 0) {
+            Cout << “Queue is empty!\n”;
+            Return;
+        }
+        Front = (front + 1) % capacity; // Circular increment of front
+        Size--;
+        If (size == 0) front = rear = -1; // Reset queue when it becomes empty
+    }
+
+    // Display elements of the queue
+    Void display() {
+        If (size == 0) {
+            Cout << “Queue is empty!\n”;
+            Return;
+        }
+        Cout << “Queue elements: “;
+        For (int I = 0; I < size; i++) {
+            Cout << arr[(front + i) % capacity] << “ “; // Display in circular order
+        }
+        Cout << endl;
+    }
+
+    // Destructor to free allocated memory
+    ~CircularQueue() {
+        Delete[] arr;
+    }
+};
+
+Int main() {
+    CircularQueue q(5); // Create a queue with capacity 5
+
+    q.enqueue(10);
+    q.enqueue(20);
+    q.enqueue(30);
+    q.display(); // Output: 10 20 30
+
+    q.dequeue();
+    q.display(); // Output: 20 30
+
+    q.enqueue(40);
+    q.enqueue(50);
+    q.enqueue(60);
+    q.display(); // Output: 20 30 40 50 60
+
+    q.enqueue(70); // Should display: Queue is full!
+
+    Return 0;
+}
