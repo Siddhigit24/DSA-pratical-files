@@ -1,0 +1,138 @@
+#include <bits/stdc++.h>
+Using namespace std;
+
+Struct Name {
+    Char firstname[10];
+    Char lastname[12];
+};
+
+Struct Profile {
+    Name student_name;
+    Float SGPA;
+    Int Roll_no;
+};
+
+Class StudentData {
+Private:
+    Profile std_db[15] = {
+        {“Priya”, “Jadhav”, 9.89, 9}, {“Abhijeet”, “Ingle”, 9.8, 6}, {“Kunal”, “Bhosale”, 9.54, 13},
+        {“Pratik”, “Shinde”, 9.12, 4}, {“Ayush”, “Kale”, 9.65, 3}, {“Kunal”, “Kachare”, 9.5, 5},
+        {“Sumit”, “Inamdar”, 9.01, 12}, {“Sanika”, “Joshi”, 9.2, 11}, {“Atharva”, “Kakade”, 9.8, 2},
+        {“Mrunal”, “Pawar”, 9.45, 7}, {“Kalyani”, “Nimbalkar”, 8.97, 15}, {“Tanmay”, “Bhise”, 8.85, 14},
+        {“Shruti”, “Jagdale”, 9.74, 1}, {“Neha”, “Gore”, 8.86, 10}, {“Akshay”, “Kumbhar”, 8.98, 8}
+    };
+    Int n = 15;
+
+Public:
+    Void view() {
+        Cout << “\n\nStudent Records:\n”;
+        Cout << “No.\tName\t\t\tSGPA\tRoll No.\n”;
+        Cout << “--------------------------------------------\n”;
+        For (int I = 0; I < n; i++) {
+            Cout << I + 1 << “.\t” << std_db[i].student_name.firstname << “ “
+                 << std_db[i].student_name.lastname << “\t” << std_db[i].SGPA
+                 << “\t” << std_db[i].Roll_no << “\n”;
+        }
+    }
+
+    Void searchSGPA(float r) {
+        Cout << “\nSearching SGPA…\n”;
+        Bool found = false;
+        For (int I = 0; I < n; i++) {
+            If (std_db[i].SGPA == r) {
+                Cout << “Found: “ << std_db[i].student_name.firstname << “ “
+                     << std_db[i].student_name.lastname << “, Roll No: “ << std_db[i].Roll_no
+                     << “, SGPA: “ << std_db[i].SGPA << “\n”;
+                Found = true;
+            }
+        }
+        If (!found) cout << “No student found with SGPA “ << r << “.\n”;
+    }
+
+    Void sortNames() {
+        For (int I = 1; I < n; i++) {
+            Profile temp = std_db[i];
+            Int j = I – 1;
+            While (j >= 0 && strcmp(std_db[j].student_name.firstname, temp.student_name.firstname) > 0) {
+                Std_db[j + 1] = std_db[j];
+                j--;
+            }
+            Std_db[j + 1] = temp;
+        }
+        Cout << “Sorted by Names.\n”;
+    }
+
+    Void sortSGPA(int l, int r) {
+        If (l >= r) return;
+        Int I = l, j = r;
+        Float pivot = std_db[l].SGPA;
+        Profile temp = std_db[l];
+        While (I < j) {
+            While (std_db[i].SGPA <= pivot && I < r) i++;
+            While (std_db[j].SGPA > pivot) j--;
+            If (I < j) swap(std_db[i], std_db[j]);
+        }
+        Std_db[l] = std_db[j];
+        Std_db[j] = temp;
+        sortSGPA(l, j – 1);
+        sortSGPA(j + 1, r);
+    }
+
+    Void sortRollNo() {
+        For (int I = 0; I < n – 1; i++) {
+            For (int j = 0; j < n – I – 1; j++) {
+                If (std_db[j].Roll_no > std_db[j + 1].Roll_no) {
+                    Swap(std_db[j], std_db[j + 1]);
+                }
+            }
+        }
+        Cout << “Sorted by Roll No.\n”;
+    }
+};
+
+Int main() {
+    StudentData std;
+    Char stopApp;
+    Do {
+        Cout << “\nMenu:\n”;
+        Cout << “1. View Records\n2. Sort by Roll No.\n3. Sort by Names\n4. Sort by SGPA\n5. Search SGPA\n6. Exit\n”;
+        Cout << “Enter choice: “;
+        Int choice;
+        Cin >> choice;
+
+        Switch (choice) {
+        Case 1:
+            Std.view();
+            Break;
+        Case 2:
+            Std.sortRollNo();
+            Std.view();
+            Break;
+        Case 3:
+            Std.sortNames();
+            Std.view();
+            Break;
+        Case 4:
+            Std.sortSGPA(0, 14);
+            Std.view();
+            Break;
+        Case 5: {
+            Cout << “Enter SGPA to search: “;
+            Float sgpa;
+            Cin >> sgpa;
+            Std.searchSGPA(sgpa);
+            Break;
+        }
+        Case 6:
+            Cout << “Exiting program.\n”;
+            Return 0;
+        Default:
+            Cout << “Invalid choice.\n”;
+        }
+
+        Cout << “Do you want to continue (Y/N)? “;
+        Cin >> stopApp;
+    } while (toupper(stopApp) == ‘Y’);
+
+    Return 0;
+}
