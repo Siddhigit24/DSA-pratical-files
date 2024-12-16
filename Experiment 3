@@ -1,64 +1,64 @@
 #include <iostream>
-Using namespace std;
+using namespace std;
 
-Class CircularQueue {
-    Int *arr;       // Array to hold queue elements
-    Int front, rear, size; // Pointers to front, rear, and size of the queue
-    Int capacity;   // Maximum capacity of the queue
+class CircularQueue {
+    int *arr;        // Array to hold queue elements
+    int front, rear, size; // Pointers to front, rear, and size of the queue
+    int capacity;    // Maximum capacity of the queue
 
-Public:
+public:
     // Constructor to initialize the queue
     CircularQueue(int cap) {
-        Capacity = cap;
-        Arr = new int[capacity];
-        Front = -1;
-        Rear = -1;
-        Size = 0;
+        capacity = cap;
+        arr = new int[capacity];
+        front = -1;
+        rear = -1;
+        size = 0;
     }
 
     // Insertion in the queue
-    Void enqueue(int value) {
-        If (size == capacity) {
-            Cout << “Queue is full!\n”;
-            Return;
+    void enqueue(int value) {
+        if (size == capacity) {
+            cout << "Queue is full!\n";
+            return;
         }
-        If (front == -1) front = 0; // Initialize front if the queue was empty
-        Rear = (rear + 1) % capacity; // Circular increment of rear
-        Arr[rear] = value;           // Insert value
-        Size++;
+        if (front == -1) front = 0; // Initialize front if the queue was empty
+        rear = (rear + 1) % capacity; // Circular increment of rear
+        arr[rear] = value;           // Insert value
+        size++;
     }
 
     // Deletion from the queue
-    Void dequeue() {
-        If (size == 0) {
-            Cout << “Queue is empty!\n”;
-            Return;
+    void dequeue() {
+        if (size == 0) {
+            cout << "Queue is empty!\n";
+            return;
         }
-        Front = (front + 1) % capacity; // Circular increment of front
-        Size--;
-        If (size == 0) front = rear = -1; // Reset queue when it becomes empty
+        front = (front + 1) % capacity; // Circular increment of front
+        size--;
+        if (size == 0) front = rear = -1; // Reset queue when it becomes empty
     }
 
     // Display elements of the queue
-    Void display() {
-        If (size == 0) {
-            Cout << “Queue is empty!\n”;
-            Return;
+    void display() {
+        if (size == 0) {
+            cout << "Queue is empty!\n";
+            return;
         }
-        Cout << “Queue elements: “;
-        For (int I = 0; I < size; i++) {
-            Cout << arr[(front + i) % capacity] << “ “; // Display in circular order
+        cout << "Queue elements: ";
+        for (int i = 0; i < size; i++) {
+            cout << arr[(front + i) % capacity] << " "; // Display in circular order
         }
-        Cout << endl;
+        cout << endl;
     }
 
     // Destructor to free allocated memory
     ~CircularQueue() {
-        Delete[] arr;
+        delete[] arr;
     }
 };
 
-Int main() {
+int main() {
     CircularQueue q(5); // Create a queue with capacity 5
 
     q.enqueue(10);
@@ -76,5 +76,5 @@ Int main() {
 
     q.enqueue(70); // Should display: Queue is full!
 
-    Return 0;
+    return 0;
 }
