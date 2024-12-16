@@ -1,11 +1,11 @@
 #include <iostream>
 #include <stack>
 #include <string>
-Using namespace std;
+using namespace std;
 
 // Definition of TreeNode
-Struct TreeNode {
-    Char data;
+struct TreeNode {
+    char data;
     TreeNode* left;
     TreeNode* right;
     TreeNode(char val) : data(val), left(nullptr), right(nullptr) {}
@@ -13,115 +13,117 @@ Struct TreeNode {
 
 // Function to construct an expression tree from a postfix expression
 TreeNode* constructFromPostfix(string postfix) {
-    Stack<TreeNode*> st;
+    stack<TreeNode*> st;
 
-    For (char ch : postfix) {
-        If (isalnum(ch)) { // Operand
-            St.push(new TreeNode(ch));
+    for (char ch : postfix) {
+        if (isalnum(ch)) { // Operand
+            st.push(new TreeNode(ch));
         } else { // Operator
             TreeNode* node = new TreeNode(ch);
-            Node->right = st.top(); st.pop();
-            Node->left = st.top(); st.pop();
-            St.push(node);
+            node->right = st.top(); st.pop();
+            node->left = st.top(); st.pop();
+            st.push(node);
         }
     }
-    Return st.top();
+    return st.top();
 }
 
 // Function to construct an expression tree from a prefix expression
 TreeNode* constructFromPrefix(string prefix) {
-    Stack<TreeNode*> st;
+    stack<TreeNode*> st;
 
-    For (int I = prefix.length() – 1; I >= 0; i--) {
-        Char ch = prefix[i];
-        If (isalnum(ch)) { // Operand
-            St.push(new TreeNode(ch));
+    for (int i = prefix.length() - 1; i >= 0; i--) {
+        char ch = prefix[i];
+        if (isalnum(ch)) { // Operand
+            st.push(new TreeNode(ch));
         } else { // Operator
             TreeNode* node = new TreeNode(ch);
-            Node->left = st.top(); st.pop();
-            Node->right = st.top(); st.pop();
-            St.push(node);
+            node->left = st.top(); st.pop();
+            node->right = st.top(); st.pop();
+            st.push(node);
         }
     }
-    Return st.top();
+    return st.top();
 }
 
 // Recursive inorder traversal
-Void recursiveInorder(TreeNode* root) {
-    If (!root) return;
+void recursiveInorder(TreeNode* root) {
+    if (!root) return;
     recursiveInorder(root->left);
-    cout << root->data << “ “;
+    cout << root->data << " ";
     recursiveInorder(root->right);
 }
 
 // Recursive postorder traversal
-Void recursivePostorder(TreeNode* root) {
-    If (!root) return;
+void recursivePostorder(TreeNode* root) {
+    if (!root) return;
     recursivePostorder(root->left);
     recursivePostorder(root->right);
-    cout << root->data << “ “;
+    cout << root->data << " ";
 }
 
 // Non-recursive inorder traversal
-Void nonRecursiveInorder(TreeNode* root) {
-    Stack<TreeNode*> st;
+void nonRecursiveInorder(TreeNode* root) {
+    stack<TreeNode*> st;
     TreeNode* curr = root;
 
-    While (curr || !st.empty()) {
-        While (curr) {
-            St.push(curr);
-            Curr = curr->left;
+    while (curr || !st.empty()) {
+        while (curr) {
+            st.push(curr);
+            curr = curr->left;
         }
-        Curr = st.top(); st.pop();
-        Cout << curr->data << “ “;
-        Curr = curr->right;
+        curr = st.top(); st.pop();
+        cout << curr->data << " ";
+        curr = curr->right;
     }
 }
 
 // Non-recursive postorder traversal
-Void nonRecursivePostorder(TreeNode* root) {
-    Stack<TreeNode*> st1, st2;
-    St1.push(root);
+void nonRecursivePostorder(TreeNode* root) {
+    if (!root) return;
 
-    While (!st1.empty()) {
+    stack<TreeNode*> st1, st2;
+    st1.push(root);
+
+    while (!st1.empty()) {
         TreeNode* curr = st1.top(); st1.pop();
-        St2.push(curr);
+        st2.push(curr);
 
-        If (curr->left) st1.push(curr->left);
-        If (curr->right) st1.push(curr->right);
+        if (curr->left) st1.push(curr->left);
+        if (curr->right) st1.push(curr->right);
     }
 
-    While (!st2.empty()) {
-        Cout << st2.top()->data << “ “;
-        St2.pop();
+    while (!st2.empty()) {
+        cout << st2.top()->data << " ";
+        st2.pop();
     }
 }
 
 // Main function
-Int main() {
-    String postfix = “ab+cde+**”; // Example postfix expression
-    String prefix = “*+ab*cd+e”;  // Example prefix expression
+int main() {
+    string postfix = "ab+cde+**"; // Example postfix expression
+    string prefix = "*+ab*cd+e";  // Example prefix expression
 
-    Cout << “Constructing tree from postfix: “ << postfix << endl;
+    cout << "Constructing tree from postfix: " << postfix << endl;
     TreeNode* rootPostfix = constructFromPostfix(postfix);
-    Cout << “Recursive Inorder: “;
+    cout << "Recursive Inorder: ";
     recursiveInorder(rootPostfix);
-    cout << “\nRecursive Postorder: “;
+    cout << "\nRecursive Postorder: ";
     recursivePostorder(rootPostfix);
-    cout << “\nNon-Recursive Inorder: “;
+    cout << "\nNon-Recursive Inorder: ";
     nonRecursiveInorder(rootPostfix);
-    cout << “\nNon-Recursive Postorder: “;
+    cout << "\nNon-Recursive Postorder: ";
     nonRecursivePostorder(rootPostfix);
 
-    cout << “\n\nConstructing tree from prefix: “ << prefix << endl;
+    cout << "\n\nConstructing tree from prefix: " << prefix << endl;
     TreeNode* rootPrefix = constructFromPrefix(prefix);
-    Cout << “Recursive Inorder: “;
+    cout << "Recursive Inorder: ";
     recursiveInorder(rootPrefix);
-    cout << “\nRecursive Postorder: “;
+    cout << "\nRecursive Postorder: ";
     recursivePostorder(rootPrefix);
-    cout << “\nNon-Recursive Inorder: “;
+    cout << "\nNon-Recursive Inorder: ";
     nonRecursiveInorder(rootPrefix);
-    cout << “\nNon-Recursive Postorder: “;
+    cout << "\nNon-Recursive Postorder: ";
     nonRecursivePostorder(rootPrefix);
 
     return 0;
