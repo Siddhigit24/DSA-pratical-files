@@ -1,0 +1,128 @@
+#include <iostream>
+Using namespace std;
+
+// Definition of the node structure
+Struct Node {
+    Int data;           // Value stored in the node
+    Node* left;         // Pointer to the left child
+    Node* right;        // Pointer to the right child
+
+    // Constructor for creating a new node
+    Node(int val) {
+        Data = val;
+        Left = nullptr;
+        Right = nullptr;
+    }
+};
+
+// Function to insert a value into the BST
+Node* insert(Node* root, int val) {
+    If (root == nullptr) {
+        // If the tree is empty, create a new node as the root
+        Return new Node(val);
+    }
+    If (val < root->data) {
+        // If the value is smaller, insert it in the left subtree
+        Root->left = insert(root->left, val);
+    } else if (val > root->data) {
+        // If the value is larger, insert it in the right subtree
+        Root->right = insert(root->right, val);
+    }
+    Return root; // Return the unchanged root node
+}
+
+// Function to find the minimum value node in a tree
+Node* findMin(Node* root) {
+    While (root && root->left != nullptr) {
+        Root = root->left;
+    }
+    Return root;
+}
+
+// Function to delete a node from the BST
+Node* deleteNode(Node* root, int key) {
+    If (root == nullptr) {
+        Return root; // Base case: tree is empty
+    }
+    If (key < root->data) {
+        // If the key is smaller, move to the left subtree
+        Root->left = deleteNode(root->left, key);
+    } else if (key > root->data) {
+        // If the key is larger, move to the right subtree
+        Root->right = deleteNode(root->right, key);
+    } else {
+        // Node to be deleted is found
+        If (root->left == nullptr) {
+            Node* temp = root->right;
+            Delete root; // Free the memory
+            Return temp;
+        } else if (root->right == nullptr) {
+            Node* temp = root->left;
+            Delete root; // Free the memory
+            Return temp;
+        }
+        // Node with two children: find the in-order successor (minimum in the right subtree)
+        Node* temp = findMin(root->right);
+        Root->data = temp->data; // Copy the successor’s value
+        Root->right = deleteNode(root->right, temp->data); // Delete the successor
+    }
+    Return root;
+}
+
+// Function to search for a value in the BST
+Bool search(Node* root, int key) {
+    If (root == nullptr) {
+        Return false; // Base case: value not found
+    }
+    If (root->data == key) {
+        Return true; // Value found
+    }
+    If (key < root->data) {
+        Return search(root->left, key); // Search in the left subtree
+    }
+    Return search(root->right, key); // Search in the right subtree
+}
+
+// In-order traversal of the BST (for display purposes)
+Void inorder(Node* root) {
+    If (root == nullptr) {
+        Return;
+    }
+    Inorder(root->left); // Visit the left subtree
+    Cout << root->data << “ “; // Print the root value
+    Inorder(root->right); // Visit the right subtree
+}
+
+Int main() {
+    Node* root = nullptr; // Start with an empty tree
+
+    // Insert values into the BST
+    Root = insert(root, 50);
+    Root = insert(root, 30);
+    Root = insert(root, 70);
+    Root = insert(root, 20);
+    Root = insert(root, 40);
+    Root = insert(root, 60);
+    Root = insert(root, 80);
+
+    // Display the BST in in-order traversal
+    Cout << “In-order traversal of the BST: “;
+    Inorder(root);
+    Cout << endl;
+
+    // Search for a value
+    Int key = 40;
+    If (search(root, key)) {
+        Cout << key << “ is found in the BST.” << endl;
+    } else {
+        Cout << key << “ is not found in the BST.” << endl;
+    }
+
+    // Delete a node
+    Root = deleteNode(root, 50);
+    Cout << “In-order traversal after deleting 50: “;
+    Inorder(root);
+    Cout << endl;
+
+    Return 0;
+}
