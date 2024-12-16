@@ -5,114 +5,114 @@
 #include <cctype>
 #include <cmath>
 
-Using namespace std;
+using namespace std;
 
 // Helper functions
-Int precedence(char op) {
-    If (op == ‘+’ || op == ‘-‘) return 1;
-    If (op == ‘*’ || op == ‘/’) return 2;
-    If (op == ‘^’) return 3;
-    Return 0;
+int precedence(char op) {
+    if (op == '+' || op == '-') return 1;
+    if (op == '*' || op == '/') return 2;
+    if (op == '^') return 3;
+    return 0;
 }
 
-Bool isOperator(char c) {
-    Return c == ‘+’ || c == ‘-‘ || c == ‘*’ || c == ‘/’ || c == ‘^’;
+bool isOperator(char c) {
+    return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';
 }
 
-String infixToPostfix(string expression) {
-    Stack<char> s;
-    String result = “”;
-    For (char &ch : expression) {
-        If (isalnum(ch)) {
-            Result += ch; // Operand goes to result
-        } else if (ch == ‘(‘) {
-            s.push(ch); // Push ‘(‘ to stack
-        } else if (ch == ‘)’) {
-            While (!s.empty() && s.top() != ‘(‘) {
-                Result += s.top(); // Pop and append operators
+string infixToPostfix(string expression) {
+    stack<char> s;
+    string result = "";
+    for (char &ch : expression) {
+        if (isalnum(ch)) {
+            result += ch; // Operand goes to result
+        } else if (ch == '(') {
+            s.push(ch); // Push '(' to stack
+        } else if (ch == ')') {
+            while (!s.empty() && s.top() != '(') {
+                result += s.top(); // Pop and append operators
                 s.pop();
             }
-            s.pop(); // Remove ‘(‘
+            s.pop(); // Remove '('
         } else { // Operator
-            While (!s.empty() && precedence(s.top()) >= precedence(ch)) {
-                Result += s.top();
+            while (!s.empty() && precedence(s.top()) >= precedence(ch)) {
+                result += s.top();
                 s.pop();
             }
             s.push(ch); // Push current operator
         }
     }
-    While (!s.empty()) { // Append remaining operators
-        Result += s.top();
+    while (!s.empty()) { // Append remaining operators
+        result += s.top();
         s.pop();
     }
-    Return result;
+    return result;
 }
 
-String infixToPrefix(string expression) {
-    Reverse(expression.begin(), expression.end()); // Reverse the expression
-    For (char &ch : expression) {
-        If (ch == ‘(‘) ch = ‘)’; // Swap ‘(‘ and ‘)’
-        Else if (ch == ‘)’) ch = ‘(‘;
+string infixToPrefix(string expression) {
+    reverse(expression.begin(), expression.end()); // Reverse the expression
+    for (char &ch : expression) {
+        if (ch == '(') ch = ')'; // Swap '(' and ')'
+        else if (ch == ')') ch = '(';
     }
-    String postfix = infixToPostfix(expression);
-    Reverse(postfix.begin(), postfix.end()); // Reverse postfix to get prefix
-    Return postfix;
+    string postfix = infixToPostfix(expression);
+    reverse(postfix.begin(), postfix.end()); // Reverse postfix to get prefix
+    return postfix;
 }
 
-Int evaluatePostfix(string expression) {
-    Stack<int> s;
-    For (char &ch : expression) {
-        If (isdigit(ch)) {
-            s.push(ch – ‘0’); // Push operand as integer
+int evaluatePostfix(string expression) {
+    stack<int> s;
+    for (char &ch : expression) {
+        if (isdigit(ch)) {
+            s.push(ch - '0'); // Push operand as integer
         } else {
-            Int b = s.top(); s.pop();
-            Int a = s.top(); s.pop();
-            Switch (ch) {
-                Case ‘+’: s.push(a + b); break;
-                Case ‘-‘: s.push(a – b); break;
-                Case ‘*’: s.push(a * b); break;
-                Case ‘/’: s.push(a / b); break;
-                Case ‘^’: s.push(pow(a, b)); break;
+            int b = s.top(); s.pop();
+            int a = s.top(); s.pop();
+            switch (ch) {
+                case '+': s.push(a + b); break;
+                case '-': s.push(a - b); break;
+                case '*': s.push(a * b); break;
+                case '/': s.push(a / b); break;
+                case '^': s.push(pow(a, b)); break;
             }
         }
     }
-    Return s.top();
+    return s.top();
 }
 
-Int evaluatePrefix(string expression) {
-    Stack<int> s;
-    Reverse(expression.begin(), expression.end()); // Reverse prefix expression
-    For (char &ch : expression) {
-        If (isdigit(ch)) {
-            s.push(ch – ‘0’); // Push operand as integer
+int evaluatePrefix(string expression) {
+    stack<int> s;
+    reverse(expression.begin(), expression.end()); // Reverse prefix expression
+    for (char &ch : expression) {
+        if (isdigit(ch)) {
+            s.push(ch - '0'); // Push operand as integer
         } else {
-            Int a = s.top(); s.pop();
-            Int b = s.top(); s.pop();
-            Switch (ch) {
-                Case ‘+’: s.push(a + b); break;
-                Case ‘-‘: s.push(a – b); break;
-                Case ‘*’: s.push(a * b); break;
-                Case ‘/’: s.push(a / b); break;
-                Case ‘^’: s.push(pow(a, b)); break;
+            int a = s.top(); s.pop();
+            int b = s.top(); s.pop();
+            switch (ch) {
+                case '+': s.push(a + b); break;
+                case '-': s.push(a - b); break;
+                case '*': s.push(a * b); break;
+                case '/': s.push(a / b); break;
+                case '^': s.push(pow(a, b)); break;
             }
         }
     }
-    Return s.top();
+    return s.top();
 }
 
 // Main function
-Int main() {
-    String infix = “a+b*(c^d-e)^(f+g*h)-I”;
+int main() {
+    string infix = "a+b*(c^d-e)^(f+g*h)-I";
 
-    Cout << “Infix Expression: “ << infix << endl;
-    Cout << “Postfix Expression: “ << infixToPostfix(infix) << endl;
-    Cout << “Prefix Expression: “ << infixToPrefix(infix) << endl;
+    cout << "Infix Expression: " << infix << endl;
+    cout << "Postfix Expression: " << infixToPostfix(infix) << endl;
+    cout << "Prefix Expression: " << infixToPrefix(infix) << endl;
 
-    String postfix = “53+82-*”;
-    String prefix = “-+5*34/82”;
+    string postfix = "53+82-*";
+    string prefix = "-+5*34/82";
 
-    Cout << “Evaluate Postfix (‘53+82-*’): “ << evaluatePostfix(postfix) << endl;
-    Cout << “Evaluate Prefix (‘-+5*34/82’): “ << evaluatePrefix(prefix) << endl;
+    cout << "Evaluate Postfix ('53+82-*'): " << evaluatePostfix(postfix) << endl;
+    cout << "Evaluate Prefix ('-+5*34/82'): " << evaluatePrefix(prefix) << endl;
 
-    Return 0;
+    return 0;
 }
