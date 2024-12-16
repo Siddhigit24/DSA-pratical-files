@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+#include <climits>
+Using namespace std;
+
+Class Graph {
+    Int vertices;
+    Vector<vector<int>> adjMatrix;
+
+Public:
+    Graph(int v) : vertices(v) {
+        adjMatrix.resize(v, vector<int>(v, 0));
+    }
+
+    Void createGraph() {
+        Cout << “Enter the adjacency matrix (0 for no direct connection, positive numbers for distances):\n”;
+        For (int I = 0; I < vertices; i++) {
+            For (int j = 0; j < vertices; j++) {
+                Cin >> adjMatrix[i][j];
+            }
+        }
+    }
+
+    Void displayGraph() {
+        Cout << “Adjacency Matrix:\n”;
+        For (int I = 0; I < vertices; i++) {
+            For (int j = 0; j < vertices; j++) {
+                Cout << adjMatrix[i][j] << “ “;
+            }
+            Cout << endl;
+        }
+    }
+
+    Void primMST() {
+        Vector<int> key(vertices, INT_MAX);
+        Vector<bool> inMST(vertices, false);
+        Vector<int> parent(vertices, -1);
+        Key[0] = 0;
+
+        For (int count = 0; count < vertices – 1; count++) {
+            Int u = -1;
+            For (int I = 0; I < vertices; i++) {
+                If (!inMST[i] && (u == -1 || key[i] < key[u]))
+                    U = I;
+            }
+
+            inMST[u] = true;
+
+            for (int v = 0; v < vertices; v++) {
+                if (adjMatrix[u][v] && !inMST[v] && adjMatrix[u][v] < key[v]) {
+                    key[v] = adjMatrix[u][v];
+                    parent[v] = u;
+                }
+            }
+        }
+
+        Cout << “Minimum Spanning Tree (Edge : Weight):\n”;
+        For (int I = 1; I < vertices; i++) {
+            Cout << parent[i] << “ – “ << I << “ : “ << adjMatrix[i][parent[i]] << endl;
+        }
+    }
+};
+
+Int main() {
+    Int vertices;
+    Cout << “Enter the number of locations (vertices): “;
+    Cin >> vertices;
+
+    Graph g(vertices);
+    Int choice;
+
+    Do {
+        Cout << “\nMenu:\n1. Create Graph\n2. Display Graph\n3. Find MST using Prim’s Algorithm\n4. Exit\nEnter your choice: “;
+        Cin >> choice;
+
+        Switch (choice) {
+        Case 1:
+            g.createGraph();
+            break;
+        case 2:
+            g.displayGraph();
+            break;
+        case 3:
+            g.primMST();
+            break;
+        case 4:
+            cout << “Exiting…\n”;
+            break;
+        default:
+            cout << “Invalid choice. Try again.\n”;
+        }
+    } while (choice != 4);
+
+    Return 0;
+}
