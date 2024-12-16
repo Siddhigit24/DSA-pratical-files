@@ -1,0 +1,116 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+Using namespace std;
+
+Class Graph {
+    Int vertices;
+    Vector<pair<int, pair<int, int>>> edges; // {weight, {u, v}}
+
+Public:
+    Graph(int v) : vertices(v) {}
+
+    Void createGraph() {
+        Int u, v, weight;
+        Cout << “Enter the number of edges: “;
+        Int edgeCount;
+        Cin >> edgeCount;
+        Cout << “Enter edges in the format (u v weight) where u and v are vertices (0-based):\n”;
+        For (int I = 0; I < edgeCount; i++) {
+            Cin >> u >> v >> weight;
+            Edges.push_back({weight, {u, v}});
+        }
+    }
+
+    Void displayGraph() {
+        Cout << “Edges in the Graph (u – v : weight):\n”;
+        For (auto &edge : edges) {
+            Cout << edge.second.first << “ – “ << edge.second.second << “ : “ << edge.first << endl;
+        }
+    }
+
+    Int findParent(int v, vector<int> &parent) {
+        If (parent[v] == v)
+            Return v;
+        Return parent[v] = findParent(parent[v], parent); // Path compression
+    }
+
+    Void unionSets(int u, int v, vector<int> &parent, vector<int> &rank) {
+        Int rootU = findParent(u, parent);
+        Int rootV = findParent(v, parent);
+
+        If (rank[rootU] < rank[rootV]) {
+            Parent[rootU] = rootV;
+        } else if (rank[rootU] > rank[rootV]) {
+            Parent[rootV] = rootU;
+        } else {
+            Parent[rootV] = rootU;
+            Rank[rootU]++;
+        }
+    }
+
+    Void kruskalMST() {
+        Sort(edges.begin(), edges.end()); // Sort edges by weight
+
+        Vector<int> parent(vertices);
+        Vector<int> rank(vertices, 0);
+
+        For (int I = 0; I < vertices; i++) {
+            Parent[i] = I;
+        }
+
+        Vector<pair<int, pair<int, int>>> mst;
+        Int mstWeight = 0;
+
+        For (auto &edge : edges) {
+            Int weight = edge.first;
+            Int u = edge.second.first;
+            Int v = edge.second.second;
+
+            If (findParent(u, parent) != findParent(v, parent)) {
+                Mst.push_back(edge);
+                mstWeight += weight;
+                unionSets(u, v, parent, rank);
+            }
+        }
+
+        Cout << “Minimum Spanning Tree (Edge : Weight):\n”;
+        For (auto &edge : mst) {
+            Cout << edge.second.first << “ – “ << edge.second.second << “ : “ << edge.first << endl;
+        }
+        Cout << “Total Weight of MST: “ << mstWeight << endl;
+    }
+};
+
+Int main() {
+    Int vertices;
+    Cout << “Enter the number of vertices: “;
+    Cin >> vertices;
+
+    Graph g(vertices);
+    Int choice;
+
+    Do {
+        Cout << “\nMenu:\n1. Create Graph\n2. Display Graph\n3. Find MST using Kruskal’s Algorithm\n4. Exit\nEnter your choice: “;
+        Cin >> choice;
+
+        Switch (choice) {
+        Case 1:
+            g.createGraph();
+            break;
+        case 2:
+            g.displayGraph();
+            break;
+        case 3:
+            g.kruskalMST();
+            break;
+        case 4:
+            cout << “Exiting…\n”;
+            break;
+        default:
+            cout << “Invalid choice. Try again.\n”;
+        }
+    } while (choice != 4);
+
+    Return 0;
+}
