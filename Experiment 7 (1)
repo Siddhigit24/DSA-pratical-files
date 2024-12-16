@@ -1,47 +1,48 @@
 #include <iostream>
 #include <vector>
 #include <climits>
-Using namespace std;
+using namespace std;
 
-Class Graph {
-    Int vertices;
-    Vector<vector<int>> adjMatrix;
+class Graph {
+    int vertices;
+    vector<vector<int>> adjMatrix;
 
-Public:
+public:
     Graph(int v) : vertices(v) {
         adjMatrix.resize(v, vector<int>(v, 0));
     }
 
-    Void createGraph() {
-        Cout << “Enter the adjacency matrix (0 for no direct connection, positive numbers for distances):\n”;
-        For (int I = 0; I < vertices; i++) {
-            For (int j = 0; j < vertices; j++) {
-                Cin >> adjMatrix[i][j];
+    void createGraph() {
+        cout << "Enter the adjacency matrix (0 for no direct connection, positive numbers for distances):\n";
+        for (int i = 0; i < vertices; i++) {
+            for (int j = 0; j < vertices; j++) {
+                cin >> adjMatrix[i][j];
             }
         }
     }
 
-    Void displayGraph() {
-        Cout << “Adjacency Matrix:\n”;
-        For (int I = 0; I < vertices; i++) {
-            For (int j = 0; j < vertices; j++) {
-                Cout << adjMatrix[i][j] << “ “;
+    void displayGraph() {
+        cout << "Adjacency Matrix:\n";
+        for (int i = 0; i < vertices; i++) {
+            for (int j = 0; j < vertices; j++) {
+                cout << adjMatrix[i][j] << " ";
             }
-            Cout << endl;
+            cout << endl;
         }
     }
 
-    Void primMST() {
-        Vector<int> key(vertices, INT_MAX);
-        Vector<bool> inMST(vertices, false);
-        Vector<int> parent(vertices, -1);
-        Key[0] = 0;
+    void primMST() {
+        vector<int> key(vertices, INT_MAX);
+        vector<bool> inMST(vertices, false);
+        vector<int> parent(vertices, -1);
+        key[0] = 0;
 
-        For (int count = 0; count < vertices – 1; count++) {
-            Int u = -1;
-            For (int I = 0; I < vertices; i++) {
-                If (!inMST[i] && (u == -1 || key[i] < key[u]))
-                    U = I;
+        for (int count = 0; count < vertices - 1; count++) {
+            int u = -1;
+            for (int i = 0; i < vertices; i++) {
+                if (!inMST[i] && (u == -1 || key[i] < key[u])) {
+                    u = i;
+                }
             }
 
             inMST[u] = true;
@@ -54,42 +55,42 @@ Public:
             }
         }
 
-        Cout << “Minimum Spanning Tree (Edge : Weight):\n”;
-        For (int I = 1; I < vertices; i++) {
-            Cout << parent[i] << “ – “ << I << “ : “ << adjMatrix[i][parent[i]] << endl;
+        cout << "Minimum Spanning Tree (Edge : Weight):\n";
+        for (int i = 1; i < vertices; i++) {
+            cout << parent[i] << " - " << i << " : " << adjMatrix[i][parent[i]] << endl;
         }
     }
 };
 
-Int main() {
-    Int vertices;
-    Cout << “Enter the number of locations (vertices): “;
-    Cin >> vertices;
+int main() {
+    int vertices;
+    cout << "Enter the number of locations (vertices): ";
+    cin >> vertices;
 
     Graph g(vertices);
-    Int choice;
+    int choice;
 
-    Do {
-        Cout << “\nMenu:\n1. Create Graph\n2. Display Graph\n3. Find MST using Prim’s Algorithm\n4. Exit\nEnter your choice: “;
-        Cin >> choice;
+    do {
+        cout << "\nMenu:\n1. Create Graph\n2. Display Graph\n3. Find MST using Prim’s Algorithm\n4. Exit\nEnter your choice: ";
+        cin >> choice;
 
-        Switch (choice) {
-        Case 1:
-            g.createGraph();
-            break;
-        case 2:
-            g.displayGraph();
-            break;
-        case 3:
-            g.primMST();
-            break;
-        case 4:
-            cout << “Exiting…\n”;
-            break;
-        default:
-            cout << “Invalid choice. Try again.\n”;
+        switch (choice) {
+            case 1:
+                g.createGraph();
+                break;
+            case 2:
+                g.displayGraph();
+                break;
+            case 3:
+                g.primMST();
+                break;
+            case 4:
+                cout << "Exiting...\n";
+                break;
+            default:
+                cout << "Invalid choice. Try again.\n";
         }
     } while (choice != 4);
 
-    Return 0;
+    return 0;
 }
