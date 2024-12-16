@@ -1,68 +1,68 @@
 #include <iostream>
 #include <vector>
-#include <queue>
 #include <climits>
-Using namespace std;
+using namespace std;
 
-// Function to find the vertex with minimum distance value
-Int findMinDistance(vector<int> &dist, vector<bool> &visited, int n) {
-    Int minDistance = INT_MAX, minIndex = -1;
-    For (int I = 0; I < n; i++) {
-        If (!visited[i] && dist[i] < minDistance) {
+// Function to find the vertex with the minimum distance value
+int findMinDistance(vector<int> &dist, vector<bool> &visited, int n) {
+    int minDistance = INT_MAX, minIndex = -1;
+    for (int i = 0; i < n; i++) {
+        if (!visited[i] && dist[i] < minDistance) {
             minDistance = dist[i];
-            minIndex = I;
+            minIndex = i;
         }
     }
-    Return minIndex;
+    return minIndex;
 }
 
-Void dijkstra(vector<vector<int>> &graph, int source) {
-    Int n = graph.size();
-    Vector<int> dist(n, INT_MAX); // Stores the shortest distances
-    Vector<bool> visited(n, false); // Tracks visited nodes
+void dijkstra(vector<vector<int>> &graph, int source) {
+    int n = graph.size();
+    vector<int> dist(n, INT_MAX); // Stores the shortest distances
+    vector<bool> visited(n, false); // Tracks visited nodes
 
-    Dist[source] = 0; // Distance to the source is 0
+    dist[source] = 0; // Distance to the source is 0
 
-    For (int count = 0; count < n – 1; count++) {
+    for (int count = 0; count < n - 1; count++) {
         // Find the nearest unvisited node
-        Int u = findMinDistance(dist, visited, n);
+        int u = findMinDistance(dist, visited, n);
 
-        Visited[u] = true;
+        visited[u] = true;
 
         // Update distances of adjacent vertices of the selected node
-        For (int v = 0; v < n; v++) {
-            If (!visited[v] && graph[u][v] && dist[u] != INT_MAX && dist[u] + graph[u][v] < dist[v]) {
-                Dist[v] = dist[u] + graph[u][v];
+        for (int v = 0; v < n; v++) {
+            if (!visited[v] && graph[u][v] && dist[u] != INT_MAX && dist[u] + graph[u][v] < dist[v]) {
+                dist[v] = dist[u] + graph[u][v];
             }
         }
     }
 
     // Print the shortest distances from the source
-    Cout << “Vertex\tDistance from Source\n”;
-    For (int I = 0; I < n; i++) {
-        Cout << I << “\t” << dist[i] << “\n”;
+    cout << "Vertex\tDistance from Source\n";
+    for (int i = 0; i < n; i++) {
+        cout << i << "\t" << dist[i] << "\n";
     }
 }
 
-Int main() {
-    Int n;
-    Cout << “Enter the number of landmarks (nodes): “;
-    Cin >> n;
+int main() {
+    int n;
+    cout << "Enter the number of landmarks (nodes): ";
+    cin >> n;
 
-    Vector<vector<int>> graph(n, vector<int>(n, 0));
+    vector<vector<int>> graph(n, vector<int>(n, 0));
 
-    Cout << “Enter the adjacency matrix (enter 0 if there is no direct path):\n”;
-    For (int I = 0; I < n; i++) {
-        For (int j = 0; j < n; j++) {
-            Cin >> graph[i][j];
+    cout << "Enter the adjacency matrix (enter 0 if there is no direct path):\n";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> graph[i][j];
         }
     }
 
-    Int source;
-    Cout << “Enter the source landmark (node index starting from 0): “;
-    Cin >> source;
+    int source;
+    cout << "Enter the source landmark (node index starting from 0): ";
+    cin >> source;
 
-    Dijkstra(graph, source);
+    dijkstra(graph, source);
 
-    Return 0;
+    return 0;
 }
+
