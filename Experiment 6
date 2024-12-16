@@ -1,128 +1,122 @@
 #include <iostream>
-#include <stack>
-#include <string>
 using namespace std;
 
-// Definition of TreeNode
-struct TreeNode {
-    char data;
-    TreeNode* left;
-    TreeNode* right;
-    TreeNode(char val) : data(val), left(nullptr), right(nullptr) {}
+class Node {
+public:
+    int data; // Data stored in the node
+    Node* left; // Pointer to the left child or thread
+    Node* right; // Pointer to the right child or thread
+    bool isThreadLeft; // True if left pointer is a thread
+    bool isThreadRight; // True if right pointer is a thread
+
+    Node(int data) {
+        this->data = data;
+        left = right = nullptr;
+        isThreadLeft = isThreadRight = false;
+    }
 };
 
-// Function to construct an expression tree from a postfix expression
-TreeNode* constructFromPostfix(string postfix) {
-    stack<TreeNode*> st;
+class ThreadedBinaryTree {
+private:
+    Node* root; // Root of the tree
 
-    for (char ch : postfix) {
-        if (isalnum(ch)) { // Operand
-            st.push(new TreeNode(ch));
-        } else { // Operator
-            TreeNode* node = new TreeNode(ch);
-            node->right = st.top(); st.pop();
-            node->left = st.top(); st.pop();
-            st.push(node);
+public:
+    ThreadedBinaryTree() {
+        root = nullptr; // Initialize an empty tree
+    }
+
+    void insert(int data) {
+        if (!root) { // If tree is empty, create the root node
+            root = new Node(data);
+            return;
+        }
+
+        Node* current = root; // Start from the root
+        Node* parent = nullptr; // To keep track of the parent node
+
+        // Traverse the tree to find the correct position for the new node
+        while (current) {
+            parent = current;
+            if (data < current->data) { // Move left
+                if (current->isThreadLeft)
+                    break; // Stop if a thread is encountered
+                current = current->left;
+            } else { // Move right
+                if (current->isThreadRight)
+                    break; // Stop if a thread is encountered
+                current = current->right;
+            }
+        }
+
+        Node* newNode = new Node(data); // Create a new node
+        if (data < parent->data) { // Insert to the left
+            newNode->left = parent->left; // Inherit parent’s left thread
+            newNode->isThreadLeft = true;
+            newNode->right = parent; // Establish a thread to the parent
+            newNode->isThreadRight = true;
+            parent->left = newNode; // Update parent’s left pointer
+            parent->isThreadLeft = false;
+        } else { // Insert to the right
+            newNode->right = parent->right; // Inherit parent’s right thread
+            newNode->isThreadRight = true;
+            newNode->left = parent; // Establish a thread to the parent
+            newNode->isThreadLeft = true;
+            parent->right = newNode; // Update parent’s right pointer
+            parent->isThreadRight = false;
         }
     }
-    return st.top();
-}
 
-// Function to construct an expression tree from a prefix expression
-TreeNode* constructFromPrefix(string prefix) {
-    stack<TreeNode*> st;
+    void inorderTraversal() {
+        Node* current = root;
 
-    for (int i = prefix.length() - 1; i >= 0; i--) {
-        char ch = prefix[i];
-        if (isalnum(ch)) { // Operand
-            st.push(new TreeNode(ch));
-        } else { // Operator
-            TreeNode* node = new TreeNode(ch);
-            node->left = st.top(); st.pop();
-            node->right = st.top(); st.pop();
-            st.push(node);
+        // Go to the leftmost node
+        while (current && !current->isThreadLeft) {
+            current = current->left;
+        }
+
+        // Traverse using threads and child links
+        while (current) {
+            cout << current->data << " ";
+
+            if (current->isThreadRight) {
+                current = current->right; // Move to the in-order successor via thread
+            } else {
+                current = current->right; // Move to the right child
+                while (current && !current->isThreadLeft) {
+                    current = current->left; // Go to the leftmost node
+                }
+            }
         }
     }
-    return st.top();
-}
 
-// Recursive inorder traversal
-void recursiveInorder(TreeNode* root) {
-    if (!root) return;
-    recursiveInorder(root->left);
-    cout << root->data << " ";
-    recursiveInorder(root->right);
-}
+    void preorderTraversal() {
+        Node* current = root;
 
-// Recursive postorder traversal
-void recursivePostorder(TreeNode* root) {
-    if (!root) return;
-    recursivePostorder(root->left);
-    recursivePostorder(root->right);
-    cout << root->data << " ";
-}
+        // Traverse nodes in pre-order
+        while (current) {
+            cout << current->data << " ";
 
-// Non-recursive inorder traversal
-void nonRecursiveInorder(TreeNode* root) {
-    stack<TreeNode*> st;
-    TreeNode* curr = root;
-
-    while (curr || !st.empty()) {
-        while (curr) {
-            st.push(curr);
-            curr = curr->left;
+            if (!current->isThreadLeft) {
+                current = current->left; // Move to the left child
+            } else {
+                current = current->right; // Use the thread to move to the next node
+            }
         }
-        curr = st.top(); st.pop();
-        cout << curr->data << " ";
-        curr = curr->right;
     }
-}
+};
 
-// Non-recursive postorder traversal
-void nonRecursivePostorder(TreeNode* root) {
-    stack<TreeNode*> st1, st2;
-    if (root) st1.push(root);
-
-    while (!st1.empty()) {
-        TreeNode* curr = st1.top(); st1.pop();
-        st2.push(curr);
-
-        if (curr->left) st1.push(curr->left);
-        if (curr->right) st1.push(curr->right);
-    }
-
-    while (!st2.empty()) {
-        cout << st2.top()->data << " ";
-        st2.pop();
-    }
-}
-
-// Main function
 int main() {
-    string postfix = "ab+cde+**"; // Example postfix expression
-    string prefix = "*+ab*cd+e";  // Example prefix expression
+    ThreadedBinaryTree tbt;
+    int elements[] = {20, 10, 30, 5, 15, 25, 35}; // Elements to insert
 
-    cout << "Constructing tree from postfix: " << postfix << endl;
-    TreeNode* rootPostfix = constructFromPostfix(postfix);
-    cout << "Recursive Inorder: ";
-    recursiveInorder(rootPostfix);
-    cout << "\nRecursive Postorder: ";
-    recursivePostorder(rootPostfix);
-    cout << "\nNon-Recursive Inorder: ";
-    nonRecursiveInorder(rootPostfix);
-    cout << "\nNon-Recursive Postorder: ";
-    nonRecursivePostorder(rootPostfix);
+    for (int el : elements) {
+        tbt.insert(el); // Insert each element into the tree
+    }
 
-    cout << "\n\nConstructing tree from prefix: " << prefix << endl;
-    TreeNode* rootPrefix = constructFromPrefix(prefix);
-    cout << "Recursive Inorder: ";
-    recursiveInorder(rootPrefix);
-    cout << "\nRecursive Postorder: ";
-    recursivePostorder(rootPrefix);
-    cout << "\nNon-Recursive Inorder: ";
-    nonRecursiveInorder(rootPrefix);
-    cout << "\nNon-Recursive Postorder: ";
-    nonRecursivePostorder(rootPrefix);
+    cout << "In-order Traversal:" << endl;
+    tbt.inorderTraversal(); // Perform in-order traversal
+    cout << "\nPre-order Traversal:" << endl;
+    tbt.preorderTraversal(); // Perform pre-order traversal
 
-    return 0;
+    return 0; // End of the program
 }
